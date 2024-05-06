@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streaming and Recording</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #f0f0f0;
+        }
+
+        #videoElement {
+            width: 80%;
+            border: 5px solid #333;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 10px;
+            width: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="videoSource" placeholder="Enter RTSP URL or video path">
+    <button onclick="startStreaming()">Start Streaming</button>
+    <button onclick="startRecording()">Start Recording</button>
+    <button onclick="stopRecording()">Stop Recording</button>
+    <img id="videoElement" src="" alt="Video Stream">
+
+    <script>
+        function startStreaming() {
+            var source = document.getElementById('videoSource').value;
+            var videoElement = document.getElementById('videoElement');
+            videoElement.src = `/video_feed?video_source=${encodeURIComponent(source)}`;
+        }
+
+        function startRecording() {
+            fetch('/start_recording', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Recording started");
+                    } else {
+                        console.error("Failed to start recording");
+                    }
+                });
+        }
+
+        function stopRecording() {
+            fetch('/stop_recording', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Recording stopped");
+                    } else {
+                        console.error("Failed to stop recording");
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
